@@ -23,7 +23,8 @@ app.get("/", function (req, res) {
 app.get("/api/whoami", function (req, res) {
   let ipaddress = req.ip.split(":")[3];
   let language = req.headers["accept-language"];
-  res.json({ ipaddress, language });
+  let software = req.headers["user-agent"];
+  res.json({ ipaddress, language, software });
 });
 
 // listen for requests :)
