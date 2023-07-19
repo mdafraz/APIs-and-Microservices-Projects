@@ -48,11 +48,10 @@ app.post("/api/shorturl", (req, res) => {
       console.log(data);
       if (data) {
         //url found
-        console.log("url found");
         res.json({ original_url: original_url, short_url: data.short_url });
       } else {
         //url not found , new url
-        console.log("url not found");
+
         let newUrl = new Url({
           original_url: original_url,
           short_url: new Date(),
@@ -81,6 +80,7 @@ app.post("/api/shorturl", (req, res) => {
   }
 });
 
+// redirect user to original URL that was given
 app.get("/api/shorturl/:short_url/", (req, res) => {
   let short_url = req.params.short_url;
 
