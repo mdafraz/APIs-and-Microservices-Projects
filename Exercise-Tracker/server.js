@@ -9,9 +9,10 @@ const uuid = require("uuid");
 mongoose.connect(process.env.MONGO_URI);
 
 const exerciseSchema = mongoose.Schema({
+  userId: { type: String, required: true },
   description: { type: String, required: true },
   duration: { type: Number, required: true },
-  date: { type: Date, required: true },
+  date: { type: String },
 });
 const Exercise = mongoose.model("Exercise", exerciseSchema);
 
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
 //Creating a user
+
 app.post("/api/users", (req, res) => {
   const username = req.body.username;
   User.findOne({ username: username })
@@ -47,7 +49,60 @@ app.post("/api/users", (req, res) => {
     });
 });
 
-app.get("/", (req, res) => {
+app.get("/api/users", (req, res) => {
+  User.find().then((data) => {
+    res.json(data);
+  });
+});
+
+app.post("/api/users/:_id/exercises", async (req, res) => {
+  try {
+    const date = req.body.date
+      ? new Date(req.body.date).toDateString()
+      : new Date().toDateString();
+
+    const newExercise = new Exercise({
+      userId: req.body[":_id"],
+      description: req.body.description,
+      duration: req.body.duration,
+      date: date,
+    });
+
+    const result = await newExercise.save();
+    const user = await User.find({ _id: req.body[":_id"] });
+    res.json({
+      username: user[0].username,
+      _id: user[0]._id,
+      date: result.date,
+      duration: result.duration,
+      description: result.description,
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+});
+
+app.get("/api/users/:_id/logs//:from/:to/:limits", async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params._id });
+    const log = await Exercise.find({ userId: req.params._id })
+      .select("-_id -userId -__v")
+      .limit(req.params.limits);
+
+    res.json({
+      _id: user._id,
+      username: user.username,
+      count: log.length,
+      log: [...log],
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+});
+
+app.get("/", async (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
