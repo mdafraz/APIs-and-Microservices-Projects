@@ -83,12 +83,12 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   }
 });
 
-app.get("/api/users/:_id/logs//:from/:to/:limits", async (req, res) => {
+app.get("/api/users/:_id/logs/", async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.params._id });
-    const log = await Exercise.find({ userId: req.params._id })
-      .select("-_id -userId -__v")
-      .limit(req.params.limits);
+    const log = await Exercise.find({ userId: req.params._id }).select(
+      "-_id -userId -__v"
+    );
 
     res.json({
       _id: user._id,
