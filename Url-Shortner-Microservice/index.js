@@ -81,6 +81,18 @@ app.post("/api/shorturl", (req, res) => {
   }
 });
 
+app.get("/api/shorturl/:short_url/", (req, res) => {
+  let short_url = req.params.short_url;
+
+  Url.findOne({ short_url: short_url })
+    .then((data) => {
+      res.redirect(data.original_url);
+    })
+    .catch((err) => {
+      console.log("No such short_url exist");
+    });
+});
+
 app.get("/api/hello", function (req, res) {
   res.json({ greeting: "hello API" });
 });
