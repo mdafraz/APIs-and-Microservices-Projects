@@ -1,0 +1,128 @@
+16
+49
+31
+32
+33
+34
+50
+why does in 62 callbackhell not happens
+why does not work with resolve(1) instead work with (, , "100")
+78 why does it check for onmusedown event
+What is the difference between native, host and user objects
+93....
+97....
+124
+130...
+regexp
+166
+169
+170
+176
+Why do I need to use freeze method
+181
+194
+
+
+
+
+
+web
+
+index.tsx
+//for forgot password we will use nodemailer
+// add something so that when you come back to the home page after going to other page then it will not scoll you to the top
+
+register.tsx 
+//what is id in the input field
+//to make actual graphql request we are gonna use urql
+//graphql code genrator is gonna look at our queries and generate typeScript types for us and generate urql hooks
+//formik has setError
+//what is server side render pages
+
+navbar.tsx 
+//it is a special nextjs component and using this component we can navigate to pages
+//zIndex={1} position="sticky" top={0} bg??????
+
+createurqlclient
+ //as i understand ?
+ //readFragment and write fragment will read and write the cache in the browser and does not make changes in the server
+//cache.resolve????
+//cache.invalide??? what i think is it delete cache and refetch it
+// like if cache is there then the querey is not run and it takes values from cache so we invalidate it
+//ssr
+//browser -> nextjs server -> graphqlApi
+//client-side rendering
+//browser -> graphqlApi
+//  i think here we play with cache to rerender
+
+create-post.tsx 
+//we use withUrqlClient so that we have access to the urql client and we do mutation
+
+_app.tsx
+// NEED TO REVIEW THE CACHING PROCEDURE
+
+login.tsx
+//what is id in the input field
+//to make actual graphql request we are gonna use urql
+//graphql code genrator is gonna look at our queries and generate typeScript types for us and generate urql hooks
+//formik has setError
+//how to push next to the desired page after login after
+
+inputfield.tsx
+
+// what field does is it simply keeps formik states(initialvalues) in sync with the current input .
+
+
+
+
+server
+
+createuserloader.ts
+//new DataLoader(keys => {}>
+//the function is gonna take some keys and return data for those keys
+//keys is gonna be and array like [1,7,78,..] thse are user id
+// and what the  function is expect to return is user for all of these keys
+//it returns objects [{id:1 , username "afraz"} , {id:2 , username:"afraz2"} , { }]
+
+createUpdootLoader
+// need to review it??
+
+post.ts resolver
+//pagination using offset???
+// we can use json_build_object because we are using postgress sql
+//json_build_object("username" , u.username) creator
+//json_build_object( this is key ,  this is the value) objectsname
+//bug with me query
+//textSnippet?
+
+isauth.ts middleware
+// typegraphql has a middleware useMiddleware that we will use
+// so How middleware works is it runs before your resolver(querys or mutations)
+
+
+post.ts entities
+
+// we will set many to one relationship for post beacuse a single user can have multiple post
+
+
+
+
+
+**** onload ****
+to compare two date we will compare time using getTime()
+137 good
+split and join to make titlecase a string
+
+
+
+
+
+
+
+
+
+
+
+
+
+
