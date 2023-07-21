@@ -11,8 +11,8 @@ mongoose.connect(process.env.MONGO_URI);
 const exerciseSchema = mongoose.Schema({
   userId: { type: String, required: true },
   description: { type: String, required: true },
-  duration: { type: Number, required: true },
-  date: { type: String },
+  duration: { type: Number, required: true, min: 1 },
+  date: { type: Date },
 });
 const Exercise = mongoose.model("Exercise", exerciseSchema);
 
@@ -40,7 +40,6 @@ app.post("/api/users", (req, res) => {
       newUser
         .save()
         .then((data) => {
-          console.log(newUser);
           res.json({ username: newUser.username, _id: newUser._id });
         })
         .catch((err) => {
@@ -57,25 +56,24 @@ app.get("/api/users", (req, res) => {
 
 app.post("/api/users/:_id/exercises", async (req, res) => {
   try {
-    const date = req.body.date
-      ? new Date(req.body.date).toDateString()
-      : new Date().toDateString();
+    const date = req.body.date ? new Date(req.body.date) : new Date();
 
     const newExercise = new Exercise({
-      userId: req.body[":_id"],
+      userId: req.params._id,
       description: req.body.description,
       duration: req.body.duration,
       date: date,
     });
 
-    const result = await newExercise.save();
-    const user = await User.find({ _id: req.body[":_id"] });
+    const exercise = await newExercise.save();
+
+    const user = await User.findOne({ _id: req.params._id });
     res.json({
-      username: user[0].username,
-      _id: user[0]._id,
-      date: result.date,
-      duration: result.duration,
-      description: result.description,
+      username: user.username,
+      _id: user["_id"],
+      date: exercise.date.toDateString(),
+      duration: exercise.duration,
+      description: exercise.description,
     });
   } catch (err) {
     console.log(err);
@@ -85,17 +83,33 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
 app.get("/api/users/:_id/logs/", async (req, res) => {
   try {
+    const { from, to, limit } = req.query;
+
     const user = await User.findOne({ _id: req.params._id });
-    const log = await Exercise.find({ userId: req.params._id }).select(
-      "-_id -userId -__v"
+    const logQuery = { userId: user._id };
+
+    if (from && to) {
+      logQuery.date = { $gte: new Date(from), $lte: new Date(to) };
+    }
+
+    const logs = await Exercise.find(logQuery).limit(
+      Number(limit) || undefined
     );
 
-    res.json({
+    const mappedLogs = logs.map((item) => ({
+      description: item.description,
+      duration: item.duration,
+      date: item.date.toDateString(),
+    }));
+
+    const result = {
       _id: user._id,
       username: user.username,
-      count: log.length,
-      log: [...log],
-    });
+      count: logs.length,
+      logs: mappedLogs,
+    };
+
+    return res.json(result);
   } catch (err) {
     console.log(err);
     throw err;
