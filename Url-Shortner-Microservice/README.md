@@ -2,7 +2,7 @@
 ### Deployed Instance:
 
 ```
-https://boilerplate-project-urlshortener-1.mohammad-afraza.repl.co/
+https://urlshortener.mohammad-afraza.repl.co/
 ```
 ### User Stories
 
